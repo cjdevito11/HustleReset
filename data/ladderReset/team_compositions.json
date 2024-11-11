@@ -1,0 +1,147 @@
+{
+    "TestTeam1": {
+        "team_id": "TestTeam1",
+        "roles": [
+            {
+                "class": "Necromancer",
+                "build": "Poison Nova Necromancer",
+                "seriousness": "Hardcore"
+            },
+            {
+                "class": "Barbarian",
+                "build": "Concentrate Barb",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Paladin",
+                "build": "Vindicator/Templar",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Pal",
+                "build": "Hdin",
+                "seriousness": "Serious"
+            }
+        ]
+    },
+    "Team Cj": {
+        "team_id": "Team Cj",
+        "roles": [
+            {
+                "class": "Sorc",
+                "build": "Nova",
+                "seriousness": "Hardcore"
+            },
+            {
+                "class": "Dru",
+                "build": "Wind",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Pal",
+                "build": "Hdin",
+                "seriousness": "Hardcore"
+            }
+        ]
+    },
+    "TestTeam2": {
+        "team_id": "TestTeam2",
+        "roles": [
+            {
+                "class": "Sorc",
+                "build": "Nova",
+                "seriousness": "Hardcore"
+            },
+            {
+                "class": "Pal",
+                "build": "Hdin",
+                "seriousness": "Hardcore"
+            }
+        ]
+    },
+    "FlyistMcPiestt": {
+        "team_id": "FlyistMcPiestt",
+        "roles": [
+            {
+                "class": "Sorceress",
+                "build": "Fire",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Sorceress",
+                "build": "Tele",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Barbarian",
+                "build": "BO",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Paladin",
+                "build": "Auradin",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Amazon",
+                "build": "CS Javazon",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Necromancer",
+                "build": "Bone",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Druid",
+                "build": "Summon",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Assassin",
+                "build": "Traps",
+                "seriousness": "Casual"
+            }
+        ]
+    },
+    "Amber Terds Shitters": {
+        "team_id": "Amber Terds Shitters",
+        "roles": [
+            {
+                "class": "Barbarian",
+                "build": "BO",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Paladin",
+                "build": "FOHer",
+                "seriousness": "Casual"
+            },
+            {
+                "class": "Necromancer",
+                "build": "Bone",
+                "seriousness": "Casual"
+            }
+        ]
+    },
+    "Bass": {
+        "team_id": "Bass",
+        "roles": [
+            {
+                "class": "Barbarian",
+                "build": "BO",
+                "seriousness": "Hardcore"
+            }
+        ]
+    },
+    "Killas Killas": {
+        "team_id": "Killas Killas",
+        "roles": [
+            {
+                "class": "Sorceress",
+                "build": "Light",
+                "seriousness": "Serious"
+            }
+        ]
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "1": {
+        "id": "1",
+        "player_id": 279028916247592961,
+        "team_id": "TestTeam1",
+        "status": "Accepted"
+    },
+    "2": {
+        "id": "2",
+        "player_id": 279028916247592961,
+        "team_id": "Team Cj",
+        "status": "Accepted"
+    },
+    "3": {
+        "id": "3",
+        "player_id": 1218620362510827543,
+        "team_id": "Team Cj",
+        "status": "Accepted"
+    },
+    "4": {
+        "id": "4",
+        "player_id": 1218620362510827543,
+        "team_id": "TestTeam1",
+        "status": "Declined"
+    },
+    "5": {
+        "id": "5",
+        "player_id": 1218620362510827543,
+        "team_id": "TestTeam2",
+        "status": "Accepted"
+    },
+    "6": {
+        "id": "6",
+        "player_id": 473891335221411860,
+        "team_id": "TestTeam2",
+        "status": "Pending"
+    },
+    "7": {
+        "id": "7",
+        "player_id": 279028916247592961,
+        "team_id": "a",
+        "status": "Pending"
+    },
+    "8": {
+        "id": "8",
+        "player_id": 839590003574046730,
+        "team_id": "a",
+        "status": "Declined"
+    },
+    "9": {
+        "id": "9",
+        "player_id": 279028916247592961,
+        "team_id": "Amber Terds Shitters",
+        "status": "Pending"
+    },
+    "10": {
+        "id": "10",
+        "player_id": 279028916247592961,
+        "team_id": "Bass",
+        "status": "Accepted"
+    }
+}

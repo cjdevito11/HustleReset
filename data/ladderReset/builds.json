@@ -1,0 +1,11 @@
+{
+  "classes": {
+    "Sorceress": ["Light", "Fire", "Cold", "Tele", "Static", "Meteorb", "Blizzard"],
+    "Paladin": ["Hdin", "Auradin", "FOHer", "Zealot", "Smiter", "Templar"],
+    "Barbarian": ["BO", "WW", "Frenzy", "Zerker", "Conc"],
+    "Amazon": ["Bowazon", "CS Javazon", "Hybridzon", "P Javazon"],
+    "Necromancer": ["Summon", "Bone", "pNova", "cExpload"],
+    "Druid": ["Wind", "Fire", "Summon", "Fury", "Rabies", "Werebear"],
+    "Assassin": ["Traps", "Mosaic", "Whirlwind", "Ghost Assassin"]
+  }
+}
