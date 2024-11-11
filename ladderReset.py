@@ -1,5 +1,3 @@
-# bot.py
-
 import discord
 from discord.ext import commands
 from discord.utils import get
@@ -9,7 +7,7 @@ import os
 
 intents = discord.Intents.default()
 intents.messages = True
-intents.members = True  # Needed to fetch member information
+intents.members = True 
 intents.guilds = True
 intents.reactions = True
 
@@ -40,10 +38,9 @@ INVITATIONS_FILE = os.path.join(DATA_DIR, 'invitations.json')
 BUILDS_FILE = os.path.join(DATA_DIR, 'builds.json')
 
 build_data = load_data(BUILDS_FILE)
-
 secret = load_data('secret.json')
 
-## DROPDOWN SELECTS ##
+## REGISTER SELECTS ##
 
 class ClassSelect(discord.ui.Select):
     def __init__(self):
@@ -67,7 +64,7 @@ class ClassSelect(discord.ui.Select):
         await interaction.response.send_message(f"Class selected: {self.values[0]}. Now select your build.", ephemeral=True)
 
         # Follow-up: Build selection dropdown
-        await interaction.followup.send(embed=discord.Embed(title="Build Selection"), view=BuildSelectView(self.values[0]))
+        await interaction.followup.send(embed=discord.Embed(title="Build Selection"), view=BuildSelectView(self.values[0]), ephemeral=True)
 
 class BuildSelect(discord.ui.Select):
     def __init__(self, selected_class):
@@ -87,14 +84,15 @@ class BuildSelect(discord.ui.Select):
             save_data(PLAYERS_FILE, user_data)
 
         await interaction.response.send_message(f"Build selected: {self.values[0]}. Now select your seriousness level.", ephemeral=True)
-        await interaction.followup.send(embed=discord.Embed(title="Seriousness Level"), view=SeriousnessSelectView())
+        await interaction.followup.send(embed=discord.Embed(title="Seriousness Level"), view=SeriousnessSelectView(), ephemeral=True)
 
 class SeriousnessSelect(discord.ui.Select):
     def __init__(self):
         options = [
+            discord.SelectOption(label="Noob", description="Still learning, need to take it slow..."),
             discord.SelectOption(label="Casual", description="Just here to have fun"),
             discord.SelectOption(label="Serious", description="I like to win, but it's not everything"),
-            discord.SelectOption(label="Hardcore", description="All in, ladder reset is serious business!"),
+            discord.SelectOption(label="RaceTo99", description="All in, ladder reset is serious business!"),
         ]
         super().__init__(placeholder="Choose your seriousness level...", options=options, min_values=1, max_values=1)
 
@@ -106,9 +104,40 @@ class SeriousnessSelect(discord.ui.Select):
         if player_id in user_data:
             user_data[player_id]['seriousness'] = self.values[0]
             save_data(PLAYERS_FILE, user_data)
+            
+        await interaction.response.send_message(f"Seriousness level: {self.values[0]}. Now select your timezone", ephemeral=True)
+        await interaction.followup.send(embed=discord.Embed(title="Timezone"), view=TimezoneSelectView(), ephemeral=True)
 
-        await interaction.response.send_message(f"Seriousness level: {self.values[0]}. Thank you for registering!", ephemeral=True)
+class TimezoneSelect(discord.ui.Select):
+    def __init__(self):
+        options = [
+            discord.SelectOption(label="EST", description="Eastern"),
+            discord.SelectOption(label="CST", description="Central"),
+            discord.SelectOption(label="MTN", description="Mountain"),
+            discord.SelectOption(label="PST", description="Pacific"),
+            discord.SelectOption(label="AST", description="Austrailia"),
+            discord.SelectOption(label="CET", description="Central European"),
+            discord.SelectOption(label="EET", description="Eastern European"),
+            discord.SelectOption(label="GMT", description="Greenwich Mean"),
+            discord.SelectOption(label="JST", description="Japan Standard"),
+            discord.SelectOption(label="CHS", description="China Standard")
+        ]
+        super().__init__(placeholder="Choose your timezone... (Or closest one)", options=options, min_values=1, max_values=1)
 
+    async def callback(self, interaction: discord.Interaction):
+        user_data = load_data(PLAYERS_FILE)
+        player_id = str(interaction.user.id)
+
+        # Update only the seriousness field
+        if player_id in user_data:
+            user_data[player_id]['timezone'] = self.values[0]
+            save_data(PLAYERS_FILE, user_data)
+
+        await interaction.response.send_message(f"Timezone: {self.values[0]}. Thank you for registering!", ephemeral=True)
+
+
+
+# Team Comp Selects
 class TeamCompClassSelect(discord.ui.Select):
     def __init__(self, role_index, team_name, num_roles, ctx):
         self.role_index = role_index
@@ -136,8 +165,7 @@ class TeamCompClassSelect(discord.ui.Select):
 
         # Send message and proceed to the build selection
         await interaction.response.send_message(f"Class for Role {self.role_index} set to: {self.values[0]}. Now select the build.", ephemeral=True)
-        await interaction.followup.send(embed=discord.Embed(title="Build Selection"), view=TeamCompBuildSelectView(self.role_index, self.team_name, self.num_roles, self.ctx))
-
+        await interaction.followup.send(embed=discord.Embed(title="Build Selection"), view=TeamCompBuildSelectView(self.role_index, self.team_name, self.num_roles, self.ctx), ephemeral=True)
 
 class TeamCompBuildSelect(discord.ui.Select):
     def __init__(self, role_index, team_name, num_roles, ctx):
@@ -165,9 +193,8 @@ class TeamCompBuildSelect(discord.ui.Select):
         await interaction.response.send_message(f"Build for Role {self.role_index} set to: {self.values[0]}. Now select the seriousness level.", ephemeral=True)
 
         # Proceed to seriousness selection
-        await interaction.followup.send(view=TeamCompSeriousnessSelectView(self.role_index, self.team_name, self.num_roles, self.ctx))
+        await interaction.followup.send(view=TeamCompSeriousnessSelectView(self.role_index, self.team_name, self.num_roles, self.ctx), ephemeral=True)
 
-# SeriousnessSelect class to handle seriousness level selection
 class TeamCompSeriousnessSelect(discord.ui.Select):
     def __init__(self, role_index, team_name, num_roles, ctx):
         self.role_index = role_index
@@ -214,7 +241,11 @@ class SeriousnessSelectView(discord.ui.View):
     def __init__(self):
         super().__init__()
         self.add_item(SeriousnessSelect())
-        
+
+class TimezoneSelectView(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.add_item(TimezoneSelect())
 
 ## TEAM VIEWS
 
@@ -222,18 +253,49 @@ class TeamCompClassSelectView(discord.ui.View):
     def __init__(self, role_index, team_name, num_roles, ctx):
         super().__init__()
         self.add_item(TeamCompClassSelect(role_index, team_name, num_roles, ctx))
-
-
 class TeamCompBuildSelectView(discord.ui.View):
     def __init__(self, role_index, team_name, num_roles, ctx):
         super().__init__()
         self.add_item(TeamCompBuildSelect(role_index, team_name, num_roles, ctx))
-
-
 class TeamCompSeriousnessSelectView(discord.ui.View):
     def __init__(self, role_index, team_name, num_roles, ctx):
         super().__init__()
         self.add_item(TeamCompSeriousnessSelect(role_index, team_name, num_roles, ctx))
+#class TeamCompTimezoneSelectView(discord.ui.View):
+#    def __init__(self):
+#        super().__init__()
+#        self.add_item(TeamCompTimezoneSelect())
+
+## CREATE TEAM MODAL
+
+# Team creation modal
+class CreateTeamModal(discord.ui.Modal):
+    def __init__(self):
+        # Define the inputs that will be shown in the modal
+        super().__init__(title="Create a New Team")
+
+        self.add_item(discord.ui.InputText(label="Team Name", placeholder="Enter your team name", min_length=3, max_length=50))
+
+        self.add_item(discord.ui.InputText(label="Do you want to join the team? (yes/no)", placeholder="yes/no", min_length=2, max_length=3))
+
+    async def callback(self, interaction: discord.Interaction):
+        team_name = self.children[0].value  # Get the team name input
+        join_decision = self.children[1].value
+        await create_team(interaction, team_name, join_decision)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
 ## BOT
@@ -341,27 +403,27 @@ async def list_players(ctx, sort_by: str = None):
     # Send the table as a formatted code block
     await ctx.send(table)
 
+#@bot.slash_command(name="create_team", description="Create a new team.")
 
-
-@bot.slash_command(name="create_team", description="Create a new team.")
 @commands.has_role('Captain')
-async def create_team(ctx, team_name):
+async def create_team(interaction, team_name, join_decision):
     teams = load_data(TEAMS_FILE)
 
     if team_name in teams:
-        await ctx.send("A team with that name already exists.")
+        await interaction.response.send_message("A team with that name already exists.")
         return
 
     team_data = {
         'team_name': team_name,
-        'captain_id': ctx.author.id,
-        'members': []
+        'captain_id': interaction.user.id,
+        'captain_name': interaction.user.name,
+        'members': [interaction.user.id] if join_decision == 'yes' or join_decision == 'Yes' or join_decision == 'YES' else [] # IF JOIN = TRUE SET CAPTAIN AS FIRST MEMBER
     }
 
     teams[team_name] = team_data
     save_data(TEAMS_FILE, teams)
 
-    await ctx.send(f"Team {team_name} has been created!")
+    await interaction.response.send_message(f"Team {team_name} has been created!")
 
 # Slash command for setting team composition
 @bot.slash_command(name="set_team_comp", description="Set your ideal team composition.")
@@ -387,7 +449,7 @@ async def set_team_comp(ctx, team_name: str, num_roles: int):
 async def start_role_selection(ctx, team_name: str, role_index: int, num_roles: int):
     if role_index < num_roles:
         # Start the class selection for the next role
-        await ctx.send(embed=discord.Embed(title=f"Select Class for Role {role_index + 1}"), view=TeamCompClassSelectView(role_index + 1, team_name, num_roles, ctx))
+        await ctx.send(embed=discord.Embed(title=f"Select Class for Role {role_index + 1}"), view=TeamCompClassSelectView(role_index + 1, team_name, num_roles, ctx), ephemeral=True)
     else:
         # All roles have been completed
         await ctx.send(f"Team composition for {team_name} has been set.")
@@ -596,36 +658,77 @@ async def decline_invite(ctx, team_name):
 
     await ctx.send(f"You have declined the invitation to join team {team_name}.")
 
-@bot.slash_command(name="list_teams", description="List all current teams")
-async def list_teams(ctx, show_members: bool = False, show_member_info: bool = False):
+@bot.slash_command(name="leave_team", description="Leave the current team.")
+async def leave_team(ctx, team_name: str = None):
+    teams = load_data(TEAMS_FILE)
+    players = load_data(PLAYERS_FILE)
+    
+    if str(ctx.user.id) not in players:
+        await ctx.send("You are not registered.")
+        return
+    
+    player_id = str(ctx.user.id)
+    
+    if team_name == None:
+        for team, team_data in teams.items():
+            if player_id in team_data['members']:
+                team_name = team['team_name']
+                break
+    
+    if not team_name:
+        await ctx.send("You are not part of any team.")
+        return
+
+    team = teams[team_name]
+    members = team['members']
+
+    teams[team_name]['members'].remove(ctx.user.id)
+
+    save_data(TEAMS_FILE, teams)
+    
+    captain_member = ctx.guild.get_member(teams[team_name]['captain_id'])
+    if captain_member:
+        try:
+            await captain_member.send(f"{ctx.user.name} has left your team {team_name}.")
+        except:
+            print('Alert Captain of Member Leaving failed.')
+            pass  # Ignore if DM fails
+
+    # Send confirmation to the player
+    await ctx.send(f"You have successfully left the team {team_name}.")
+
+def getTeamsList(show_members = True, show_member_info = False):
     teams = load_data(TEAMS_FILE)
     players = load_data(PLAYERS_FILE)
 
     if not teams:
-        await ctx.send("No teams have been created yet.")
-        return
+        return None
 
     table = ""
     
-    # Loop through teams and build a formatted string
     for team_name, team in teams.items():
-        captain_member = ctx.guild.get_member(team['captain_id'])
-        captain_name = captain_member.name if captain_member else 'Unknown'
+        print(f'Team: {team}')
+        print(f'Team Name: {team_name}')
+        
+        captain_name = team['captain_name']
+        members = team['members']
 
-        # Start building team details
+       # print(f'Team: {team}')
+        #print(f'members: {members}')
+
         table += f"Team: {team_name} | Captain: {captain_name}\n"
         
-        # If the user requested to show team members
         if show_members:
             table += "Members:\n"
 
-            # Show details for each member if requested
-            for member_id in team['members']:
-                member = ctx.guild.get_member(member_id)
-                member_name = member.name if member else 'Unknown'
-                
-                # Show member info or just their name
-                if show_member_info and str(member_id) in players:
+            for member_id in members:
+                #print(f'Member Id: {member_id}')
+                member = players[str(member_id)]
+                #(f'Member: {member}')
+                member_name = member['username'] if member else 'Unknown'
+                #print(f'Member_name: {member_name}')
+
+                if show_member_info and str(member_id) in players.items():
                     player_info = players[str(member_id)]
                     table += "| {:<15} | {:<5} | {:<5} | {:<10} | {:<10} | {:<3} | {:<3} | {:<12} |\n".format(
                         member_name,
@@ -641,6 +744,72 @@ async def list_teams(ctx, show_members: bool = False, show_member_info: bool = F
                     table += f" - {member_name}\n"
             
             # Add a separator between teams
+            table += "-" * 60 + "\n"
+
+    # Send the table as a formatted code block
+    table = f"```{table}```"
+    return table
+
+@bot.slash_command(name="list_teams", description="List all current teams")
+async def list_teams(ctx, show_members: bool = True, show_member_info: bool = False):
+
+    teams = getTeamsList(show_members, show_member_info)
+
+    if not teams:
+        await ctx.send("No teams have been created yet.")
+        return
+
+    await ctx.send(teams)
+
+@bot.slash_command(name="show_team", description="Show team by Team Name")
+async def show_team(ctx, team_name: str = '', show_member_info: bool = False):
+    teams = load_data(TEAMS_FILE)
+    players = load_data(PLAYERS_FILE)
+    user = ctx.user
+
+    if not teams:
+        await ctx.send("No teams have been created yet.")
+        return
+    
+    table = "```"
+    if team_name == '':
+        for team in teams.values():
+            members = team['members']
+            if user.id in members:
+                team_name = team['team_name']
+                break
+
+    if teams[team_name]:
+        team = teams[team_name]
+        captain_member = ctx.guild.get_member(team['captain_id'])
+        captain_name = captain_member.name if captain_member else 'Unknown'
+
+        # Start building team details
+        table += f"Team: {team_name} | Captain: {captain_name}\n"
+        
+        table += "Members:\n"
+
+        # Show details for each member if requested
+        for member_id in team['members']:
+            member = ctx.guild.get_member(member_id)
+            member_name = member.name if member else 'Unknown'
+            
+            # Show member info or just their name
+            if show_member_info and str(member_id) in players:
+                player_info = players[str(member_id)]
+                table += "| {:<15} | {:<5} | {:<5} | {:<10} | {:<10} | {:<3} | {:<3} | {:<12} |\n".format(
+                    member_name,
+                    player_info.get('class', 'N/A'),
+                    player_info.get('build', 'N/A'),
+                    player_info.get('seriousness', 'N/A'),
+                    team_name,
+                    'Yes' if player_info.get('experience') else 'No',
+                    player_info.get('timezone', 'N/A'),
+                    player_info.get('availability', 'N/A')
+                )
+            else:
+                table += f" - {member_name}\n"
+            
             table += "-" * 60 + "\n"
 
     # Send the table as a formatted code block
@@ -733,6 +902,7 @@ async def view_applications(ctx, team_name):
     await ctx.send(embed=embed)
 
 
+
 @bot.slash_command(name="accept_member", description="Accept member to your team")
 @commands.has_role('Captain')
 async def accept_member(ctx, member: discord.Member, team_name):
@@ -816,6 +986,8 @@ async def decline_member(ctx, member: discord.Member, team_name):
 
     await ctx.send(f"{member.name}'s application has been declined.")
 
+
+
 @bot.slash_command(name="set_team_plan", description="Set your teams plan for ladder reset")
 @commands.has_role('Captain')
 async def set_team_plan(ctx, team_name):
@@ -858,8 +1030,6 @@ async def set_team_plan(ctx, team_name):
                     await member.send(f"The team plan for {team_name} has been updated by your captain.")
                 except:
                     pass  # Ignore if DM fails
-
-
 
 
 @bot.slash_command(name="view_team_plan", description="View your teams plan for ladder reset")
@@ -1043,5 +1213,54 @@ async def create_team_channels(guild, team_name, member_ids):
 
 
 
-# Run the bot
+
+
+class ResetButtons(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+
+
+    @discord.ui.button(label="Register", style=discord.ButtonStyle.primary, custom_id="register")
+    async def register(self, button: discord.ui.Button, interaction: discord.Interaction):
+        players_data = load_data(PLAYERS_FILE)
+        player_id = str(interaction.user.id)
+        
+        print('Register Command')
+        player_entry = {
+            'discord_id': player_id,   # Store Discord ID
+            'username': interaction.user.name,   # Store Discord Username
+            'class': '',                         # Class to be filled by user
+            'build': '',                         # Build to be filled by user
+            'seriousness': '',                   # Seriousness to be filled by user
+            'timezone': '',                      # Timezone to be filled by user
+            'first_reset': False,                # Default value for first ladder reset
+            'experience': False,                 # Default experience flag
+            'availability': ''                   # Availability to be filled by user
+        }
+
+        players_data[player_id] = player_entry
+        save_data(PLAYERS_FILE, players_data)
+        await interaction.response.send_message("Fill out everything to register for Ladder Reset.", ephemeral=True)
+        await interaction.followup.send(view=ClassSelectView(), ephemeral=True)
+
+    @discord.ui.button(label="Show Teams", style=discord.ButtonStyle.primary, custom_id="show_teams")
+    async def show_teams(self, button: discord.ui.Button, interaction: discord.Interaction):
+        
+        teams = getTeamsList()
+        if not teams:
+            await interaction.response.send_message("No teams have been created yet.", ephemeral=True)
+            return
+        await interaction.response.send_message(teams, ephemeral=True)
+
+    @discord.ui.button(label="Create Team", style=discord.ButtonStyle.primary, custom_id="create_team_button")
+    async def create_team_button(self, button: discord.ui.Button, interaction: discord.Interaction):
+        modal = CreateTeamModal()
+        await interaction.response.send_modal(modal)
+
+
+@bot.slash_command(name="show_reset_buttons", description="Show the ladder reset related buttons")
+async def show_reset_buttons(ctx):
+    await ctx.send("Ladder Season 9:", view=ResetButtons())
+
+
 bot.run(secret['token'])

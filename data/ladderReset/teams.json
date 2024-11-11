@@ -2,13 +2,13 @@
     "TestTeam1": {
         "team_name": "TestTeam1",
         "captain_id": 279028916247592961,
-        "members": [
-            279028916247592961
-        ]
+        "captain_name": "cjdev11",
+        "members": []
     },
     "TestTeam2": {
         "team_name": "TestTeam2",
         "captain_id": 279028916247592961,
+        "captain_name": "cjdev11",
         "members": [
             1218620362510827543
         ]
@@ -16,6 +16,7 @@
     "Team Cj": {
         "team_name": "Team Cj",
         "captain_id": 279028916247592961,
+        "captain_name": "cjdev11",
         "members": [
             279028916247592961,
             1218620362510827543
@@ -24,6 +25,7 @@
     "FlyistMcPiestt": {
         "team_name": "FlyistMcPiestt",
         "captain_id": 839590003574046730,
+        "captain_name": "flymcpie",
         "members": [
             386688097724923906
         ]
@@ -31,21 +33,25 @@
     "plant2ftawayfromme": {
         "team_name": "plant2ftawayfromme",
         "captain_id": 1265649154491813951,
+        "captain_name": "prx0b",
         "members": []
     },
     "a": {
         "team_name": "a",
         "captain_id": 1265649154491813951,
+        "captain_name": "prx0b",
         "members": []
     },
     "Amber Terds Shitters": {
         "team_name": "Amber Terds Shitters",
         "captain_id": 487423926343827475,
+        "captain_name": "l1nkx.",
         "members": []
     },
     "Bass": {
         "team_name": "Bass",
         "captain_id": 380982575210037248,
+        "captain_name": "basshead88",
         "members": [
             279028916247592961
         ]
@@ -53,6 +59,13 @@
     "Killas Killas": {
         "team_name": "Killas Killas",
         "captain_id": 916893783319253032,
+        "captain_name": "killapod",
+        "members": []
+    },
+    "tesTeam1": {
+        "team_name": "tesTeam1",
+        "captain_id": 279028916247592961,
+        "captain_name": "cjdev11",
         "members": []
     }
 }
